@@ -7,15 +7,26 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class StartGame {
     public static void main(String[] args) {
-        ImagePath.add("D:\\java\\eve2022_02\\src\\main\\resources\\images"); //задаем папку с изображениями.
+        ImagePath.add("D:\\java\\eveOnline2022\\src\\main\\resources\\images"); //задаем папку с изображениями.
         ShipMining venture = new ShipMining(145, 5000, 16);
+        ClickTo click = new ClickTo();
+//        Region screen = new Screen().selectRegion();
+        Region regionForUnload = new Region(1407, 27, 513, 815);
+        String warpTorefery = "refenery_for_compress.png";
+        String warpToAB1P1 = "agra_ab_1_p1.png";
+        String redForge = "redForge.png";
+        String openCargoDeposit = "openCargoDeposit.png";
         try {
             Robot robot = new Robot();
-            robot.delay(400);
+            robot.delay(1_400);
             Mining mining = new Mining(venture.getRangeLaser(), robot);
-            int volumeAsteroid = mining.run();
-            float volumeLaser = (float) venture.getVolumeLaserMining() / 30;
-            float time = volumeAsteroid / volumeLaser;
+            Move move = new Move();
+            move.warpToFromAltE(robot, warpTorefery);
+            
+
+//            int volumeAsteroid = mining.run();
+//            float volumeLaser = (float) venture.getVolumeLaserMining() / 30;
+//            float time = volumeAsteroid / volumeLaser;
 //            double ceil = Math.ceil(time);
 //            long timeStart = System.currentTimeMillis();
 //            long timeEndMining = timeStart + (long) ceil * 1000;
