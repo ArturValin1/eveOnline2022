@@ -6,49 +6,86 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class StartGame {
+    static String warpTorefery = "refenery_for_compress.png";
+    static String warpToAB1P1 = "agra_ab_1_p1.png";
+    static String redForge = "redForge.png";
+    static String openCargoDeposit = "openCargoDeposit1.png";
+    static ClickTo click = new ClickTo();
+    static Move move = new Move();
+    static Mining mining;
+
     public static void main(String[] args) {
         ImagePath.add("D:\\java\\eveOnline2022\\src\\main\\resources\\images"); //задаем папку с изображениями.
         ShipMining venture = new ShipMining(145, 5000, 16);
-        ClickTo click = new ClickTo();
-//        Region screen = new Screen().selectRegion();
-        Region regionForUnload = new Region(1407, 27, 513, 815);
-        String warpTorefery = "refenery_for_compress.png";
-        String warpToAB1P1 = "agra_ab_1_p1.png";
-        String redForge = "redForge.png";
-        String openCargoDeposit = "openCargoDeposit.png";
+
         try {
             Robot robot = new Robot();
+            mining = new Mining(venture.getRangeLaser(), robot);
             robot.delay(1_400);
-            Mining mining = new Mining(venture.getRangeLaser(), robot);
-            Move move = new Move();
-            move.warpToFromAltE(robot, warpTorefery);
-            
+            Region region = new Screen();
 
-//            int volumeAsteroid = mining.run();
-//            float volumeLaser = (float) venture.getVolumeLaserMining() / 30;
-//            float time = volumeAsteroid / volumeLaser;
-//            double ceil = Math.ceil(time);
-//            long timeStart = System.currentTimeMillis();
-//            long timeEndMining = timeStart + (long) ceil * 1000;
-//            System.out.println(ceil);
-//            System.out.println(timeStart);
-//            System.out.println(timeEndMining);
-//            unLoadCargo(robot);
-//            survey(robot);
+            int volumeAsteroid = mining.run();
+            System.out.println(volumeAsteroid);
+            float volumeLaser = (float) 4.8;
+            float time = (volumeAsteroid / volumeLaser);
+            double timeMining = Math.ceil(time) * 1_000;
+            long timeStart = System.currentTimeMillis();
+            long timeEndMining = timeStart + (long) timeMining;
+            System.out.println(timeMining);
+            float timeFillCargo = (float) (300 / (2 * 2.4)) * 1000;
+
+            while (true) {
+                if (System.currentTimeMillis() - timeStart >= timeFillCargo) {
+                    unloadToRefenery(robot, region);
+                    break;
+                }
+                if (System.currentTimeMillis() - timeStart >= timeEndMining) {
+                    mining.run();
+                    break;
+                }
+                robot.delay(3_000);
+            }
         } catch (AWTException ex) {
             ex.printStackTrace();
         }
     }
 
-    public static void survey(Robot robot) {
-        robot.keyPress(KeyEvent.VK_ALT);
-        robot.delay(ThreadLocalRandom.current().nextInt(60, 206));
-        robot.keyPress(KeyEvent.VK_F1);
-        robot.delay(ThreadLocalRandom.current().nextInt(60, 206));
-        robot.keyRelease(KeyEvent.VK_F1);
-        robot.delay(ThreadLocalRandom.current().nextInt(60, 206));
-        robot.keyRelease(KeyEvent.VK_ALT);
-        robot.delay(ThreadLocalRandom.current().nextInt(60, 206));
+    public static int moveToAsteroidAndStartMinig(Robot robot, Region region) {
+        move.warpToFromAltE(robot, warpToAB1P1);
+        robot.delay(28_000);
+        move.pressReleaseTwoKeys(robot, KeyEvent.VK_ALT, KeyEvent.VK_F1);
+        robot.delay(5_500);
+        int ore = mining.run();
+        robot.delay(3_000);
+        move.pressReleaseOneKeys(robot, KeyEvent.VK_F1);
+        robot.delay(333);
+        move.pressReleaseOneKeys(robot, KeyEvent.VK_F1);
+        return ore;
+    }
+
+    public static void unloadToRefenery(Robot robot, Region region) {
+        move.warpToFromAltE(robot, warpTorefery);
+        move.pressReleaseOneKeys(robot, KeyEvent.VK_F1);
+        robot.delay(100);
+        move.pressReleaseOneKeys(robot, KeyEvent.VK_F2);
+        robot.delay(28_000);
+        moveOreToDeposit(robot, region);
+    }
+
+    public static void moveOreToDeposit(Robot robot, Region region) {
+        click.rightClick(region, redForge);
+        robot.delay(600);
+        click.leftClick(region, openCargoDeposit);
+        robot.delay(500);
+        try {
+            Match matchOre = region.find("azure.png");
+            Match matchDeposit = region.find("dropItems.png");
+            region.dragDrop(matchOre, matchDeposit);
+            robot.delay(100);
+            click.leftClick(region, "transfer.png");
+        } catch (FindFailed e) {
+            e.printStackTrace();
+        }
     }
 
     public static void unLoadCargo(Robot robot) {

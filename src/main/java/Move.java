@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 
 public class Move {
     public boolean warpToFromAltE(Robot robot, String warpToObject) {
-//        ImagePath.add("D:\\java\\eve2022_02\\src\\main\\resources\\images"); //задаем папку с изображениями.
         boolean result = false;
         Region region = new Screen();
         robot.delay(1_000);
@@ -25,6 +24,8 @@ public class Move {
         pressReleaseTwoKeys(robot, KeyEvent.VK_ALT, KeyEvent.VK_E);
         return result;
     }
+
+
 
     public void pressReleaseTwoKeys(Robot robot, int k1, int k2) {
         robot.keyPress(k1);
