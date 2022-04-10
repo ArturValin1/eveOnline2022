@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Mining {
     private int range;
@@ -48,7 +49,7 @@ public class Mining {
                     robot.delay(500);
                     robot.keyRelease(KeyEvent.VK_CONTROL);
                     robot.delay(1000);
-                    returnResult=volumeAsteroid;
+                    returnResult = volumeAsteroid;
                     break;
                 } else {
                     System.out.println(String.format("%s ---> No", str));
@@ -94,6 +95,20 @@ public class Mining {
             e.printStackTrace();
         }
         return matches;
+    }
+
+    public List<Region> newFindM3(Region region) {
+        List<Region> regionList = new ArrayList<>();
+        try {
+            Iterator<Match> matches = region.findAll("m3.png");
+            while (matches.hasNext()) {
+                Match findM3 = matches.next();
+                regionList.add(new Region(region.x, findM3.y, region.w, 28));
+            }
+        } catch (FindFailed e) {
+            e.printStackTrace();
+        }
+        return regionList;
     }
 }
 
