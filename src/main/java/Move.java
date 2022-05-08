@@ -1,43 +1,83 @@
-import org.sikuli.script.*;
+import org.sikuli.script.FindFailed;
+import place.*;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Move {
-    public boolean warpToFromAltE(Robot robot, String warpToObject) {
+    private Factory factory = new Factory();
+    private Inventory inv = new Inventory();
+    private Athanor athanor = new Athanor();
+    private Belt belt = new Belt();
+    private ClickTo clickTo = new ClickTo();
+    private Transfer transfer = new Transfer();
+    private CloseOpenWindow cow = new CloseOpenWindow();
+    private List<String> listAsteroids = new ArrayList<String>();
+    private Robot robot;
+
+    public Move(Robot robot) {
+        this.robot = robot;
+        addAsteroids();
+    }
+
+    public void addAsteroids() {
+        listAsteroids.add("veldspar.png");
+        listAsteroids.add("scordite.png");
+        listAsteroids.add("plagioclase.png");
+    }
+
+    public boolean moveToUnloadAndReturned() {
         boolean result = false;
-        Region region = new Screen();
-        robot.delay(1_000);
-        pressReleaseTwoKeys(robot, KeyEvent.VK_ALT, KeyEvent.VK_E);
-        Match match = null;
-        try {
-            match = region.find(warpToObject);
-            region.rightClick(match);
-            robot.delay(900);
-            match = region.find("warp_to_location.png");
-            match.click();
-            result = true;
-        } catch (FindFailed e) {
-            e.printStackTrace();
+        if (warpTo(athanor)) {
+            robot.delay(50_000);
+            if (unload()) {
+                robot.delay(5_000);
+                result = warpTo(belt);
+            }
         }
-        robot.delay(1_000);
-        pressReleaseTwoKeys(robot, KeyEvent.VK_ALT, KeyEvent.VK_E);
         return result;
     }
 
-
-
-    public void pressReleaseTwoKeys(Robot robot, int k1, int k2) {
-        robot.keyPress(k1);
-        robot.delay(200);
-        robot.keyPress(k2);
-        robot.delay(200);
-        robot.keyRelease(k2);
-        robot.keyRelease(k1);
+    public boolean warpTo(BaseClass base) {
+        boolean result = cow.isOpenWindow(base, robot);
+        if (result) {
+            clickTo.rightClick(base.getRegion(), base.getPic());
+            robot.delay(500);
+            result = clickTo.leftClick(base.getRegion(), "warpTo.png"); //контрольная проверка
+            robot.delay(100);
+        }
+        cow.closedWindow(base, robot);
+        return result;
     }
-    public void pressReleaseOneKeys(Robot robot, int k1) {
-        robot.keyPress(k1);
-        robot.delay(200);
-        robot.keyRelease(k1);
+
+    public boolean unload() {
+        boolean result = false;
+        if (clickTo.leftClick(factory.getRegion(), factory.getPic())) {
+            robot.delay(1_300);
+            if (clickTo.leftClick(factory.getRegion(), "openFactoryHangar.png")) {
+                if (cow.isOpenWindow(inv, robot)) {
+                    clickTo.leftClick(inv.getRegion(), inv.getPic());
+                    robot.delay(200);
+                    for (String s : listAsteroids) {
+                        if (clickTo.rightClick(inv.getRegion(), s)) {
+                            robot.delay(300);
+                            clickTo.leftClick(inv.getRegion(), "selectAll.png");
+                            try {
+                                transfer.getRegion().dragDrop(s, transfer.getRegion().find("dropItems.png"));
+                                result = clickTo.leftClick(transfer.getRegion(), transfer.getPic());
+
+                            } catch (FindFailed e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+                    robot.delay(200);
+                    cow.closedWindow(inv, robot);
+                }
+            }
+        }
+        return result;
     }
 }

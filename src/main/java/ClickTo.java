@@ -10,7 +10,7 @@ public class ClickTo {
             match.click();
             result = true;
         } catch (FindFailed e) {
-            e.printStackTrace();
+            System.out.println(String.format("Не могу найти %s. ClickTo->leftClick()", point));
         }
         return result;
     }
@@ -22,7 +22,7 @@ public class ClickTo {
             match.rightClick();
             result = true;
         } catch (FindFailed e) {
-            e.printStackTrace();
+            System.out.println(String.format("Не могу найти %s. ClickTo->rightClick()", point));
         }
         return result;
     }
