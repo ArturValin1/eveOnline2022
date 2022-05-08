@@ -103,7 +103,7 @@ public class Mining {
             Iterator<Match> matches = region.findAll("m3.png");
             while (matches.hasNext()) {
                 Match findM3 = matches.next();
-                regionList.add(new Region(region.x, findM3.y, region.w, 28));
+                regionList.add(new Region(region.x, findM3.y, region.w, 28)); //findM3.h высота строки
             }
         } catch (FindFailed e) {
             e.printStackTrace();
