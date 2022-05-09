@@ -11,8 +11,16 @@ public class CloseOpenWindow {
     }
 
     public void setup() {
+        String r900 = "/R1900x600";
+        String r1080 = "/R1980x1080";
         String path = "src/main/resources/images";
-        ImagePath.add(path);
+        String result;
+        if (new Screen().toString().contains("600")) {
+            result = r900;
+        } else {
+            result = r1080;
+        }
+        ImagePath.add(path + result);
         OCR.globalOptions().language("ccc");
     }
 
@@ -57,6 +65,7 @@ public class CloseOpenWindow {
         }
         return result;
     }
+
     public void pressOneKey(Robot r, java.util.List<Integer> list) {
         list.forEach(e -> {
             r.keyPress(e);
