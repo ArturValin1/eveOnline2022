@@ -1,6 +1,7 @@
 import org.sikuli.script.*;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +10,7 @@ public class Mining {
     private int range;
     private Robot robot;
     private Region regionForSearchM3;
+    private int _volumeAsteroid = 0;
 
     //Класс с методами для определения астероида для добычи.
     public Mining(int range, Robot robot, Region regionForSearchM3) {
@@ -56,5 +58,67 @@ public class Mining {
             e.printStackTrace();
         }
         return list;
+    }
+
+    //запускаем оценку залежей астероидов.
+    public boolean startSurvey() {
+        boolean result = false;
+        try {
+            robot.keyPress(KeyEvent.VK_ALT);
+            robot.delay(400);
+            robot.keyPress(KeyEvent.VK_F1);
+            robot.delay(400);
+            robot.keyRelease(KeyEvent.VK_F1);
+            robot.delay(200);
+            robot.keyRelease(KeyEvent.VK_ALT);
+            robot.delay(5_000); //ждем пока отработаем модуль.
+            result = true;
+        } catch (Exception e) {
+            System.out.println("Какая то шляпа. Mining.java -> startSurvey()");
+        }
+        return result;
+    }
+
+    //захватываем подходящий астероид для добычи
+    public int lockAsteroid() {
+        Region region = asteroidForMining();
+        try {
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.delay(200);
+            region.click();
+            robot.delay(300);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+            volumeAsteroid(region);
+            robot.delay(3_500); //ждем захвата астероида
+        } catch (Exception e) {
+            System.out.println("Какая то шляпа. Mining.java -> lockAsteroid()");
+        }
+        return _volumeAsteroid;
+    }
+
+    //вычисляем объем руды в астероиде
+    public int volumeAsteroid(Region region) {
+        _volumeAsteroid = 0;
+        String str = region.text().split("m3")[0].replace(" ", "");
+        try {
+            _volumeAsteroid = Integer.parseInt(str);
+        } catch (NumberFormatException nfe) {
+            System.out.println("Не могу распознать число. " + str);
+        } catch (Exception e) {
+            System.out.println("Какая то шляпа. Mining.java -> volumeAsteroid()");
+        }
+        return _volumeAsteroid;
+    }
+    //запускаем лазеры для добычи
+    public void startLaser(){
+        robot.delay(200);
+        robot.keyPress(KeyEvent.VK_F1);
+        robot.delay(300);
+        robot.keyPress(KeyEvent.VK_F2);
+        robot.delay(300);
+        robot.keyRelease(KeyEvent.VK_F1);
+        robot.delay(200);
+        robot.keyRelease(KeyEvent.VK_F2);
+        robot.delay(200);
     }
 }

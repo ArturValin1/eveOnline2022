@@ -34,6 +34,7 @@ public class Move {
             if (unload()) {
                 robot.delay(5_000);
                 result = warpTo(belt);
+                robot.delay(50_000);
             }
         }
         return result;
