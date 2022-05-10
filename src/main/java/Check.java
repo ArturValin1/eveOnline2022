@@ -2,6 +2,7 @@ import org.sikuli.script.FindFailed;
 import org.sikuli.script.Match;
 import place.BaseClass;
 import place.LaserOnAsteroid;
+import place.MinPerSecond;
 import place.PlagioclaseLock;
 
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 public class Check {
     private BaseClass laser = new LaserOnAsteroid();
     private BaseClass asteroid = new PlagioclaseLock();
+    private MinPerSecond mps = new MinPerSecond();
 
     //определяем количество лазеров в регионе (на астероиде)
     public int checkLaserOnAsteroid() {
@@ -19,6 +21,12 @@ public class Check {
     //определяем количество захваченных астероидов
     public int checkLockPlagioclase() {
         int result = inRegion(asteroid);
+        return result;
+    }
+
+    //определяем нахомся ли в варпе
+    public int isMPS() {
+        int result = inRegion(mps);
         return result;
     }
 

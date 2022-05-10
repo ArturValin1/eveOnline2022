@@ -6,15 +6,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//все начинается с calcTime().
 public class Mining {
-    private int range;
+    private int rangeLaser;
     private Robot robot;
     private Region regionForSearchM3;
     private int _volumeAsteroid = 0;
+    private int seconds = 0;
 
     //Класс с методами для определения астероида для добычи.
-    public Mining(int range, Robot robot, Region regionForSearchM3) {
-        this.range = range;
+    public Mining(int rangeLaser, Robot robot, Region regionForSearchM3) {
+        this.rangeLaser = rangeLaser;
         this.robot = robot;
         this.regionForSearchM3 = regionForSearchM3;
     }
@@ -30,7 +32,7 @@ public class Mining {
                 String distance = split[1];
                 if (distance.endsWith("km")) {
                     int range = Integer.parseInt(distance.split("km")[0]);
-                    if (range < 16) { //16 км по умолчанию, нужно поменять если больше дальность добычи.
+                    if (range < rangeLaser) { //16 км по умолчанию, нужно поменять если больше дальность добычи.
                         returnRegion = findReg;
                         break;
                     }
@@ -102,6 +104,7 @@ public class Mining {
         String str = region.text().split("m3")[0].replace(" ", "");
         try {
             _volumeAsteroid = Integer.parseInt(str);
+            System.out.println(String.format("Объем захваченного астероида равен %s m3", _volumeAsteroid));
         } catch (NumberFormatException nfe) {
             System.out.println("Не могу распознать число. " + str);
         } catch (Exception e) {
@@ -109,16 +112,12 @@ public class Mining {
         }
         return _volumeAsteroid;
     }
-    //запускаем лазеры для добычи
-    public void startLaser(){
-        robot.delay(200);
-        robot.keyPress(KeyEvent.VK_F1);
-        robot.delay(300);
-        robot.keyPress(KeyEvent.VK_F2);
-        robot.delay(300);
-        robot.keyRelease(KeyEvent.VK_F1);
-        robot.delay(200);
-        robot.keyRelease(KeyEvent.VK_F2);
-        robot.delay(200);
+
+    //время добычи астероида
+    public int calcTime() {
+        seconds = 0;
+        seconds = (int) (lockAsteroid() / (2.4 * 2)) + 1;
+        System.out.println(String.format("Время добычи равно %s секунд.", seconds));
+        return seconds;
     }
 }

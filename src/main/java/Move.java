@@ -15,10 +15,12 @@ public class Move {
     private CloseOpenWindow cow = new CloseOpenWindow();
     private List<String> listAsteroids = new ArrayList<String>();
     private Robot robot;
+    private Control control = null;
 
     public Move(Robot robot) {
         this.robot = robot;
         addAsteroids();
+        control = new Control(robot);
     }
 
     public void addAsteroids() {
@@ -30,11 +32,17 @@ public class Move {
     public boolean moveToUnloadAndReturned() {
         boolean result = false;
         if (warpTo(athanor)) {
-            robot.delay(50_000);
-            if (unload()) {
-                robot.delay(5_000);
-                result = warpTo(belt);
-                robot.delay(50_000);
+            robot.delay(5_000);
+            while (control.inWarp()) {
+                robot.delay(3_000);
+            }
+        }
+        if (unload()) {
+            robot.delay(1_000);
+            result = warpTo(belt);
+            robot.delay(5_000);
+            while (control.inWarp()) {
+                robot.delay(3_000);
             }
         }
         return result;
