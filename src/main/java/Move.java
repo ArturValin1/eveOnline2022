@@ -9,11 +9,11 @@ public class Move {
     private Factory factory = new Factory();
     private Inventory inv = new Inventory();
     private Athanor athanor = new Athanor();
-    private Belt belt = new Belt();
+    private BaseClass belt = new Belt2();
     private ClickTo clickTo = new ClickTo();
     private Transfer transfer = new Transfer();
     private CloseOpenWindow cow = new CloseOpenWindow();
-    private List<String> listAsteroids = new ArrayList<String>();
+    private List<String> listAsteroids = new ArrayList<>();
     private Robot robot;
     private Control control = null;
 

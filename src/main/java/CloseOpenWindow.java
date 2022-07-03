@@ -21,6 +21,8 @@ public class CloseOpenWindow {
             result = r1080;
         }
         ImagePath.add(path + result);
+        ImagePath.add(path+result+"/digitals");
+
         OCR.globalOptions().language("ccc");
     }
 

@@ -1,48 +1,41 @@
 import org.sikuli.script.Screen;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Start {
-    private boolean flag = true;
-    private long timeMiningAsteroid = 0;
-    private long delta = 0;
-    private long startTime = 0;
-    private long endTime = 0;
 
     public static void main(String[] args) throws AWTException {
+        Start s = new Start();
         Robot robot = new Robot();
         Move move = new Move(robot);
         Control control = new Control(robot);
         robot.delay(1_000);
         Mining mining = new Mining(16, robot, new Screen().selectRegion());
-
-        for (int i = 0; i < 3; i++) {
-            oneCycle(move, mining, control, robot);
-            System.out.println(String.format(" ------------   %s ------------", i));
-            robot.delay(10_000 + 1000 * i * 2);
-        }
-
+        s.miningStart(robot, move, control, mining);
         System.out.println("END");
     }
 
 
-    public void isFullTimeToMining() {
-
-
+    private void miningStart(Robot robot, Move move, Control control, Mining mining) {
+        for (int i = 0; true; i++) {
+            if (!oneCycle(move, mining, control, robot)) {
+                break;
+            }
+            System.out.println(String.format(" ------------   %s ------------", i));
+        }
     }
 
-
-
-    public static void oneCycle(Move move, Mining mining, Control control, Robot robot) {
+    public boolean oneCycle(Move move, Mining mining, Control control, Robot robot) {
+        boolean result = true;
         robot.keyRelease(KeyEvent.VK_CONTROL);
         robot.delay(1_000);
         control.removeLasers();
         move.moveToUnloadAndReturned();
-        mining.startSurvey();
-        mining.calcTime();
-        control.startTwoLaser();
+        if (!mining.startMining(control)) {
+            result = false;
+        }
+        return result;
     }
-
-
 }
