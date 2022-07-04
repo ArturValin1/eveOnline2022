@@ -9,7 +9,7 @@ public class Move {
     private Factory factory = new Factory();
     private Inventory inv = new Inventory();
     private Athanor athanor = new Athanor();
-    private BaseClass belt = new Belt2();
+    private BaseClass belt = new Belt2_1();
     private ClickTo clickTo = new ClickTo();
     private Transfer transfer = new Transfer();
     private CloseOpenWindow cow = new CloseOpenWindow();

@@ -43,6 +43,8 @@ public class Mining {
         if (asteroid1 != null) {
             returnRegion = asteroid1.getRegion();
             asteroid = asteroid1;
+        } else {
+            asteroid = new Asteroid(null, 0, 111);
         }
 
 //        try {
