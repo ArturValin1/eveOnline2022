@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sikulixapi-2.0.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../siculi_new/sikulixapi-2.0.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

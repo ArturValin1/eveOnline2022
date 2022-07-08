@@ -10,6 +10,30 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 public class BlackAndWhite {
+    /*
+     * Take from
+     * https://github.com/jfalkner/find_image/blob/master/src/falkner/jayson/findimage/FindImage.java
+     * remake for my purposes.
+     */
+
+    public Point findSubImageInBigImage(BufferedImage subimage, BufferedImage image) {
+        // brute force N^2 check all places in the image
+        for (int i = 0; i <= image.getWidth() - subimage.getWidth(); i++) {
+            check_subimage:
+            for (int j = 0; j <= image.getHeight() - subimage.getHeight(); j++) {
+                for (int ii = 0; ii < subimage.getWidth(); ii++) {
+                    for (int jj = 0; jj < subimage.getHeight(); jj++) {
+                        if (subimage.getRGB(ii, jj) != image.getRGB(i + ii, j + jj)) {
+                            continue check_subimage;
+                        }
+                    }
+                }
+                // if here, all pixels matched
+                return new Point(i, j);
+            }
+        }
+        return null;
+    }
 
     public int[] volumeAndRange(BufferedImage[] bufferedImages) {
         String km = "src/main/resources/images/R1900x600/kmBlack.png";
@@ -220,13 +244,13 @@ public class BlackAndWhite {
     }
 
     public void gg() throws IOException {
-        BufferedImage orginalImage = ImageIO.read(new File("C:\\java_projects\\t1.png"));
+        BufferedImage orginalImage = ImageIO.read(new File("src/main/resources/images/R1980x1080/kmColor.png"));
         BufferedImage blackAndWhiteImg = new BufferedImage(
                 orginalImage.getWidth(), orginalImage.getHeight(),
                 BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D graphics = blackAndWhiteImg.createGraphics();
         graphics.drawImage(orginalImage, 0, 0, null);
-        ImageIO.write(blackAndWhiteImg, "png", new File("C:\\java_projects\\BWt1.png"));
+        ImageIO.write(blackAndWhiteImg, "png", new File("D:\\java\\kmBW.png"));
     }
 
     public int findImage(BufferedImage original, BufferedImage find) throws IOException {
