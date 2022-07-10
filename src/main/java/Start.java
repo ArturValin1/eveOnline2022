@@ -1,6 +1,6 @@
 import org.sikuli.script.Screen;
 
-import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 

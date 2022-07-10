@@ -118,13 +118,15 @@ public class Mining {
             robot.delay(3_500); //ждем захвата астероида
         } catch (Exception e) {
             System.out.println("Какая то шляпа. Mining.java -> lockAsteroid()");
+            System.exit(1);
         }
         return _volumeAsteroid;
     }
 
     //вычисляем объем руды в астероиде
     public int volumeAsteroid() {
-        return _volumeAsteroid = asteroid.getVolume();
+        _volumeAsteroid = asteroid.getVolume();
+        return _volumeAsteroid;
     }
 
     public int volumeAsteroid(Region region) {
@@ -188,7 +190,7 @@ public class Mining {
                 graphics2D.drawImage(colorImage, 0, 0, null);
                 BufferedImage[] split = bw.splitImageToVolumeAndRange(blackImage, finalM3Image);
                 int[] res = bw.volumeAndRange(split);
-                if (res[0] > 0 && res[1] < 17) {
+                if (res[0] > 0 && res[1] < 16) {
                     System.out.println(String.format("Region x = %s  y = %s accept. Volume is %s, range is %s", e.getX(), e.getY(), res[0], res[1]));
                     asteroidList.add(new Asteroid(e, res[0], res[1]));
                 } else
