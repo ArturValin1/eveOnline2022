@@ -108,18 +108,22 @@ public class Mining {
     //захватываем подходящий астероид для добычи
     public int lockAsteroid() {
         Region region = asteroidForMining();
-        try {
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            robot.delay(200);
-            region.click();
-            robot.delay(300);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-            volumeAsteroid();
-            robot.delay(3_500); //ждем захвата астероида
-        } catch (Exception e) {
-            System.out.println("Какая то шляпа. Mining.java -> lockAsteroid()");
-            System.exit(1);
-        }
+        if (region != null) {
+            try {
+                robot.keyPress(KeyEvent.VK_CONTROL);
+                robot.delay(200);
+                region.click();
+                robot.delay(300);
+                robot.keyRelease(KeyEvent.VK_CONTROL);
+                volumeAsteroid();
+                robot.delay(3_500); //ждем захвата астероида
+            } catch (Exception e) {
+                System.out.println("Какая то шляпа. Mining.java -> lockAsteroid()");
+                return -2;
+//            System.exit(1);
+            }
+        } else
+            _volumeAsteroid = 0;
         return _volumeAsteroid;
     }
 
@@ -146,8 +150,11 @@ public class Mining {
     //время добычи астероида
     public int calcTime() {
         int seconds = 0;
-        seconds = (int) (lockAsteroid() / (2.4 * 2)) + 1;
-        System.out.println(String.format("Время добычи равно %s секунд.", seconds));
+        int volumeAsteroid = lockAsteroid();
+        if (volumeAsteroid > 0) {
+            seconds = (int) (volumeAsteroid / (2.4 * 2)) + 1;
+            System.out.println(String.format("Время добычи равно %s секунд.", seconds));
+        }
         return seconds;
     }
 
