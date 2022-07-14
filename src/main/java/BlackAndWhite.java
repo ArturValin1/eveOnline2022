@@ -244,13 +244,13 @@ public class BlackAndWhite {
     }
 
     public void gg() throws IOException {
-        BufferedImage orginalImage = ImageIO.read(new File("src/main/resources/images/R1980x1080/kmColor.png"));
+        BufferedImage orginalImage = ImageIO.read(new File("src/main/resources/images/R1980x1080/1107.png"));
         BufferedImage blackAndWhiteImg = new BufferedImage(
                 orginalImage.getWidth(), orginalImage.getHeight(),
                 BufferedImage.TYPE_BYTE_BINARY);
         Graphics2D graphics = blackAndWhiteImg.createGraphics();
         graphics.drawImage(orginalImage, 0, 0, null);
-        ImageIO.write(blackAndWhiteImg, "png", new File("D:\\java\\kmBW.png"));
+        ImageIO.write(blackAndWhiteImg, "png", new File("D:\\java\\1107BW.png"));
     }
 
     public int findImage(BufferedImage original, BufferedImage find) throws IOException {

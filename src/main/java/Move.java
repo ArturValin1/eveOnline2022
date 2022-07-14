@@ -9,7 +9,7 @@ public class Move {
     private Factory factory = new Factory();
     private Inventory inv = new Inventory();
     private Athanor athanor = new Athanor();
-    private BaseClass belt = new Belt2_1();
+    private BaseClass belt;
     private ClickTo clickTo = new ClickTo();
     private Transfer transfer = new Transfer();
     private CloseOpenWindow cow = new CloseOpenWindow();
@@ -22,6 +22,7 @@ public class Move {
         addAsteroids();
         control = new Control(robot);
     }
+
 
     public void addAsteroids() {
         listAsteroids.add("veldspar.png");
@@ -88,5 +89,9 @@ public class Move {
             }
         }
         return result;
+    }
+
+    public void setBelt(BaseClass belt) {
+        this.belt = belt;
     }
 }
