@@ -10,6 +10,7 @@ public class Start {
 
     public static void main(String[] args) throws AWTException {
         Belts belts = new Belts();
+        belts.initPlace();
         List<BaseClass> listBelts = belts.getBelts();
         Start s = new Start();
         Robot robot = new Robot();
