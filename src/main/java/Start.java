@@ -24,6 +24,7 @@ public class Start {
 
 
     private void miningStart(Robot robot, Move move, Control control, Mining mining, List<BaseClass> listBelts) {
+        int ii = 0;
         while (listBelts.size() > 0) {
             move.setBelt(listBelts.get(0));
             for (int i = 0; true; i++) {
@@ -34,8 +35,10 @@ public class Start {
                     listBelts.remove(0);
                     break;
                 }
-                System.out.println(String.format(" ------------   %s ------------", i));
             }
+            System.out.println("++++++++++++++++++++++++++++++++++++");
+            System.out.println(String.format(" ------------ ++++++++++   %s  +++++++++++------------", ii));
+            System.out.println("++++++++++++++++++++++++++++++++++++");
         }
     }
 

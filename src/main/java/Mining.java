@@ -1,4 +1,5 @@
 import dao.Asteroid;
+import helper.BlackAndWhite;
 import org.sikuli.script.*;
 import place.BaseClass;
 import place.PlagioclaseLock;

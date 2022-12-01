@@ -1,3 +1,5 @@
+package helper;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,30 +12,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 public class BlackAndWhite {
-    /*
-     * Take from
-     * https://github.com/jfalkner/find_image/blob/master/src/falkner/jayson/findimage/FindImage.java
-     * remake for my purposes.
-     */
 
-    public Point findSubImageInBigImage(BufferedImage subimage, BufferedImage image) {
-        // brute force N^2 check all places in the image
-        for (int i = 0; i <= image.getWidth() - subimage.getWidth(); i++) {
-            check_subimage:
-            for (int j = 0; j <= image.getHeight() - subimage.getHeight(); j++) {
-                for (int ii = 0; ii < subimage.getWidth(); ii++) {
-                    for (int jj = 0; jj < subimage.getHeight(); jj++) {
-                        if (subimage.getRGB(ii, jj) != image.getRGB(i + ii, j + jj)) {
-                            continue check_subimage;
-                        }
-                    }
-                }
-                // if here, all pixels matched
-                return new Point(i, j);
-            }
-        }
-        return null;
-    }
 
     public int[] volumeAndRange(BufferedImage[] bufferedImages) {
         String km = "src/main/resources/images/R1900x600/kmBlack.png";
@@ -243,16 +222,7 @@ public class BlackAndWhite {
         return result;
     }
 
-    public void gg() throws IOException {
-        BufferedImage orginalImage = ImageIO.read(new File("src/main/resources/images/R1980x1080/1107.png"));
-        BufferedImage blackAndWhiteImg = new BufferedImage(
-                orginalImage.getWidth(), orginalImage.getHeight(),
-                BufferedImage.TYPE_BYTE_BINARY);
-        Graphics2D graphics = blackAndWhiteImg.createGraphics();
-        graphics.drawImage(orginalImage, 0, 0, null);
-        ImageIO.write(blackAndWhiteImg, "png", new File("D:\\java\\1107BW.png"));
-    }
-
+    @Deprecated
     public int findImage(BufferedImage original, BufferedImage find) throws IOException {
         int result = -1;
         for (int i = 0; i < original.getWidth() - find.getWidth() + 1; i++) {
@@ -262,5 +232,157 @@ public class BlackAndWhite {
             }
         }
         return result;
+    }
+
+    /*
+     * Take from
+     * https://github.com/jfalkner/find_image/blob/master/src/falkner/jayson/findimage/FindImage.java
+     * remake for my purposes.
+     * ищем в изображение в большом изображении.
+     */
+    public Point findSubImageInBigImage(BufferedImage subImage, BufferedImage image) {
+        // brute force N^2 check all places in the image
+        for (int i = 0; i <= image.getWidth() - subImage.getWidth(); i++) {
+            check_subimage:
+            for (int j = 0; j <= image.getHeight() - subImage.getHeight(); j++) {
+                for (int ii = 0; ii < subImage.getWidth(); ii++) {
+                    for (int jj = 0; jj < subImage.getHeight(); jj++) {
+                        if (subImage.getRGB(ii, jj) != image.getRGB(i + ii, j + jj)) {
+                            continue check_subimage;
+                        }
+                    }
+                }
+                // if here, all pixels matched
+                return new Point(i, j);
+            }
+        }
+        return null;
+    }
+
+    //Конвертируем в черно-белое изображение
+    public BufferedImage convertToBlackAndWhite1(BufferedImage orginalImage) {
+        BufferedImage blackAndWhiteImg = new BufferedImage(
+                orginalImage.getWidth(), orginalImage.getHeight(),
+                BufferedImage.TYPE_BYTE_BINARY);
+        Graphics2D graphics = blackAndWhiteImg.createGraphics();
+        graphics.drawImage(orginalImage, 0, 0, null);
+        return blackAndWhiteImg;
+    }
+
+    //Обрезаем черные пиксели сверху изображения
+    public BufferedImage sliceUpString(BufferedImage bi) {
+        BufferedImage imageReturn = null;
+        if (bi != null) {
+            int width = bi.getWidth();
+            int height = bi.getHeight();
+            Color color = null;
+            int cutHeight = 0;
+            boolean flag = false;
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    color = new Color(bi.getRGB(j, i));
+                    if (color.getBlue() > 0) {
+                        flag = true;
+                        cutHeight = i;
+                        break;
+                    }
+                }
+                if (flag) {
+                    break;
+                }
+            }
+            imageReturn = bi.getSubimage(0, cutHeight, width, height - cutHeight);
+        }
+        return imageReturn;
+    }
+
+    //отделяем строку с изображением
+    public BufferedImage[] sliceDownString(BufferedImage bi) {
+        BufferedImage[] imageReturn = new BufferedImage[2];
+        imageReturn[0] = null;
+        imageReturn[1] = null;
+        if (bi != null) {
+            int width = bi.getWidth();
+            int height = bi.getHeight();
+            Color color = null;
+            int cutHeight = 1;
+            boolean isWidht;
+            for (int i = 0; i < height; i++) {
+                isWidht = false;
+                for (int j = 0; j < width; j++) {
+                    color = new Color(bi.getRGB(j, i));
+                    if (color.getBlue() == 0) {
+
+                    } else {
+                        isWidht = true;
+                        break;
+                    }
+                }
+                if (!isWidht) {
+                    cutHeight = i;
+                    break;
+                }
+            }
+            if (cutHeight > 1) {
+                imageReturn[0] = bi.getSubimage(0, 0, width, cutHeight);
+                imageReturn[1] = bi.getSubimage(0, cutHeight, width, height - cutHeight);
+            }
+        }
+        return imageReturn;
+    }
+
+    //отделяем первый символ из изображения
+    public BufferedImage[] sliceToSymbols(BufferedImage bi) {
+        BufferedImage[] image = new BufferedImage[2];
+        image[0] = null;
+        image[1] = null;
+        if (bi != null) {
+            boolean isColor = false;
+            boolean noZero = true;
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    Color color = new Color(bi.getRGB(x, y));
+                    if (color.getBlue() > 0) {
+                        isColor = true;
+                        break;
+                    }
+                }
+                if (isColor) {
+                    isColor = false;
+                } else {
+                    image[0] = bi.getSubimage(0, 0, x, bi.getHeight());
+                    image[1] = bi.getSubimage(x, 0, bi.getWidth() - x, bi.getHeight());
+                    noZero = false;
+                    break;
+                }
+            }
+            if (noZero) {
+                image[0] = bi;
+            }
+        }
+        return image;
+    }
+
+    //все строки из изображения
+    public List<BufferedImage> getStringPicsFromImage(BufferedImage bi) {
+        List<BufferedImage> list = new ArrayList<>();
+        BufferedImage[] images = sliceDownString(sliceUpString(bi));
+        while (images[0] != null) {
+            list.add(images[0]);
+            images = sliceDownString(sliceUpString(images[1]));
+        }
+        return list;
+    }
+
+    //все символы из строки
+    public List<BufferedImage> getSybolsFromStringImage(BufferedImage bi) {
+        List<BufferedImage> symbols = new ArrayList<>();
+        BufferedImage[] im = sliceToSymbols(cutPicture(bi));
+        do {
+            symbols.add(im[0]);
+            im = sliceToSymbols(cutPicture(im[1]));
+        }
+        while (im[0] != null);
+        return symbols;
     }
 }
