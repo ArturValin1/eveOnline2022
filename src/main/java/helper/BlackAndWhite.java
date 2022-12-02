@@ -4,10 +4,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -384,5 +382,35 @@ public class BlackAndWhite {
         }
         while (im[0] != null);
         return symbols;
+    }
+
+    /**
+     * Парсим изображение в строку.
+     * @param image строка с цифрами.
+     * @return стока с парсингом.
+     */
+    public String parseImageString(BufferedImage image) {
+        SampleNumbers sm = new SampleNumbers();
+        sm.initMap();
+        StringBuilder sb = new StringBuilder();
+        BufferedImage test = convertToBlackAndWhite1(image);
+        List<BufferedImage> list = getStringPicsFromImage(test);
+        list.forEach(zz -> {
+            List<BufferedImage> numbers = getSybolsFromStringImage(zz);
+            Set set = sm.getMap().keySet();
+            Map<String, List<BufferedImage>> map = sm.getMap();
+            numbers.forEach(w -> {
+                set.forEach(v -> {
+                    map.get(v).forEach(a -> {
+                        if (findSubImageInBigImage(a, w) != null) {
+                            sb.append(v);
+                        }
+                    });
+                });
+            });
+            sb.append("\n");
+        });
+        System.out.println(sb);
+        return sb.toString();
     }
 }
