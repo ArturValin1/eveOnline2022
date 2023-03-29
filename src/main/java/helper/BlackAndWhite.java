@@ -125,6 +125,8 @@ public class BlackAndWhite {
         return im1;
     }
 
+    //перенёс в новый класс ImageUtils.
+    @Deprecated
     public void printImage(BufferedImage bi) {
         System.out.println();
         String ANSI_RESET = "\u001B[0m";
@@ -145,6 +147,8 @@ public class BlackAndWhite {
         }
     }
 
+    //перенёс в класс ImageUtils
+    @Deprecated
     public BufferedImage cutPicture(BufferedImage bi) {
         if (bi != null) {
             int width = bi.getWidth();
@@ -257,6 +261,7 @@ public class BlackAndWhite {
         return null;
     }
 
+    @Deprecated
     //Конвертируем в черно-белое изображение
     public BufferedImage convertToBlackAndWhite1(BufferedImage orginalImage) {
         BufferedImage blackAndWhiteImg = new BufferedImage(
@@ -329,6 +334,7 @@ public class BlackAndWhite {
         return imageReturn;
     }
 
+    @Deprecated
     //отделяем первый символ из изображения
     public BufferedImage[] sliceToSymbols(BufferedImage bi) {
         BufferedImage[] image = new BufferedImage[2];
@@ -373,7 +379,7 @@ public class BlackAndWhite {
     }
 
     //все символы из строки
-    public List<BufferedImage> getSybolsFromStringImage(BufferedImage bi) {
+    public List<BufferedImage> getSymbolsFromStringImage(BufferedImage bi) {
         List<BufferedImage> symbols = new ArrayList<>();
         BufferedImage[] im = sliceToSymbols(cutPicture(bi));
         do {
@@ -386,6 +392,7 @@ public class BlackAndWhite {
 
     /**
      * Парсим изображение в строку.
+     *
      * @param image строка с цифрами.
      * @return стока с парсингом.
      */
@@ -396,7 +403,7 @@ public class BlackAndWhite {
         BufferedImage test = convertToBlackAndWhite1(image);
         List<BufferedImage> list = getStringPicsFromImage(test);
         list.forEach(zz -> {
-            List<BufferedImage> numbers = getSybolsFromStringImage(zz);
+            List<BufferedImage> numbers = getSymbolsFromStringImage(zz);
             Set set = sm.getMap().keySet();
             Map<String, List<BufferedImage>> map = sm.getMap();
             numbers.forEach(w -> {

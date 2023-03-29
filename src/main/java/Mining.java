@@ -48,27 +48,6 @@ public class Mining {
             asteroid = new Asteroid(null, 0, 111);
         }
 
-//        try {
-//            List<Region> list = findM3(regionForSearchM3); //список с регионами в которых обнаружено м3
-//
-//            for (Region findReg : list) {
-//                String str = findReg.text().replace(" ", "");
-//                String[] split = str.split("m3");
-//                String distance = split[1];
-//                if (distance.endsWith("km")) {
-//                    int range = Integer.parseInt(distance.split("km")[0]);
-//                    if (range < rangeLaser) { //16 км по умолчанию, нужно поменять если больше дальность добычи.
-//                        returnRegion = findReg;
-//                        break;
-//                    }
-//                } else if (distance.endsWith("m")) {           //может и не нужно это условие
-//                    returnRegion = findReg;
-//                    break;
-//                }
-//            }
-//        } catch (NumberFormatException nfe) {
-//            System.out.println("Не могу корректно распознать число. Ошибка в классе Mining.java функция asteroidForMining. ");
-//        }
         return returnRegion;
     }
 
@@ -153,7 +132,7 @@ public class Mining {
         int seconds = 0;
         int volumeAsteroid = lockAsteroid();
         if (volumeAsteroid > 0) {
-            seconds = (int) (volumeAsteroid / (2.4 * 2)) + 1;
+            seconds = (int) (volumeAsteroid / (2.5 * 2)) + 1;
             System.out.println(String.format("Время добычи равно %s секунд.", seconds));
         }
         return seconds;
@@ -161,7 +140,7 @@ public class Mining {
 
     public boolean startMining(Control control) {
         boolean result = true;
-        int timeFillShip = 1_000; //время заполнения трюма коробля в секундах
+        int timeFillShip = 980; //время заполнения трюма коробля в секундах
         int timeMiningAsteroid = 0;
         while (timeFillShip > 0) {
             if (timeMiningAsteroid <= 0) {
@@ -210,6 +189,4 @@ public class Mining {
 
         return asteroidList.size() > 0 ? asteroidList.get(0) : null;
     }
-
-
 }
