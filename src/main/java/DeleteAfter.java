@@ -14,7 +14,7 @@ public class DeleteAfter {
         SliceToLine stl = new SliceToLine();
         SliceToSymbol sliceToSymbol = new SliceToSymbol();
         try {
-            BufferedImage bi = ImageIO.read(new File("src/main/resources/images/R1080/tt1.png"));
+            BufferedImage bi = ImageIO.read(new File("src/main/resources/images/R1080/t01.png"));
             bi = iu.cutPicture(iu.convertToBlackAndWhite1(bi));
             List<BufferedImage> strings = stl.getAllString(bi);
             List<BufferedImage> symbols = new ArrayList<>();
