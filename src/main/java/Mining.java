@@ -1,15 +1,14 @@
 import dao.Asteroid;
-import helper.BlackAndWhite;
+
+import helper.ParseString;
 import org.sikuli.script.*;
 import place.BaseClass;
 import place.PlagioclaseLock;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -113,20 +112,6 @@ public class Mining {
         return _volumeAsteroid;
     }
 
-    public int volumeAsteroid(Region region) {
-        _volumeAsteroid = 0;
-        String str = region.text().split("m3")[0].replace(" ", "");
-        try {
-            _volumeAsteroid = Integer.parseInt(str);
-            System.out.println(String.format("Объем захваченного астероида равен %s m3", _volumeAsteroid));
-        } catch (NumberFormatException nfe) {
-            System.out.println("Не могу распознать число. " + str);
-        } catch (Exception e) {
-            System.out.println("Какая то шляпа. Mining.java -> volumeAsteroid()");
-        }
-        return _volumeAsteroid;
-    }
-
     //время добычи астероида
     public int calcTime() {
         int seconds = 0;
@@ -162,31 +147,40 @@ public class Mining {
         return result;
     }
 
+    //Ищем подходящий астероид из списка (Регионов).
     public Asteroid findAsteroidFromList(List<Region> regionList) {
-        BlackAndWhite bw = new BlackAndWhite();
-        String m3 = "src/main/resources/images/R1900x600/m3black.png";
-        BufferedImage m3Image = null;
         List<Asteroid> asteroidList = new ArrayList<>();
-        try {
-            m3Image = bw.cutPicture(ImageIO.read(new File(m3)));
-            BufferedImage finalM3Image = m3Image;
-            regionList.forEach(e -> {
-                BufferedImage colorImage = e.getImage().get();
-                BufferedImage blackImage = new BufferedImage(colorImage.getWidth(), colorImage.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
-                Graphics2D graphics2D = blackImage.createGraphics();
-                graphics2D.drawImage(colorImage, 0, 0, null);
-                BufferedImage[] split = bw.splitImageToVolumeAndRange(blackImage, finalM3Image);
-                int[] res = bw.volumeAndRange(split);
-                if (res[0] > 0 && res[1] < 16) {
-                    System.out.println(String.format("Region x = %s  y = %s accept. Volume is %s, range is %s", e.getX(), e.getY(), res[0], res[1]));
-                    asteroidList.add(new Asteroid(e, res[0], res[1]));
-                } else
-                    System.out.println(String.format("Region x = %s  y = %s EPSENT. Volume is %s, range is %s", e.getX(), e.getY(), res[0], res[1]));
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        ParseString parseString = new ParseString();
+        for (Region r : regionList) {
+            BufferedImage bi = r.getImage().get();
+            String[] data = parseString.parseImageString(bi).split("m\\^3");
+            int volume = 0;
+            try {
+                volume = Integer.parseInt(data[0]);
+            } catch (NumberFormatException e) {
+                System.out.println("Не могу распознать строку." + data[0]);
+            }
+            String rangeStr = null;
+            try {
+                rangeStr = data[1];
+                boolean kmIs = rangeStr.contains("km");
+                String separator = kmIs ? "km" : "m";
+                int range = Integer.parseInt(rangeStr.split(separator)[0]);
+                if (range < 16 && volume > 0) {
+                    System.out.println(String.format("Region x = %s  y = %s accept. Volume is %s, range is %s", r.getX(), r.getY(), volume, range));
+                    asteroidList.add(new Asteroid(r, volume, range));
+                } else {
+                    if (separator.equals("m")) {
+                        System.out.println(String.format("Region x = %s  y = %s accept. Volume is %s, range is %s", r.getX(), r.getY(), volume, range));
+                        asteroidList.add(new Asteroid(r, volume, range));
+                    } else {
+                        System.out.println(String.format("Region x = %s  y = %s Not Good for Lock. Volume is %s, range is %s", r.getX(), r.getY(), volume, range));
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Не корректно распознана строка");
+            }
         }
-
         return asteroidList.size() > 0 ? asteroidList.get(0) : null;
     }
 }

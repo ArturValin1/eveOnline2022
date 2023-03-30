@@ -12,7 +12,7 @@ public class CloseOpenWindow {
 
     public void setup() {
         String r900 = "/R1900x600";
-        String r1080 = "/R1980x1080";
+        String r1080 = "/R1080";
         String path = "src/main/resources/images";
         String result;
         if (new Screen().toString().contains("600")) {
@@ -20,9 +20,7 @@ public class CloseOpenWindow {
         } else {
             result = r1080;
         }
-        ImagePath.add(path + result);
-        ImagePath.add(path+result+"/digitals");
-
+        ImagePath.add(path + result + "/gameObjects");
         OCR.globalOptions().language("ccc");
     }
 
