@@ -5,6 +5,7 @@ import org.sikuli.script.*;
 import place.BaseClass;
 import place.PlagioclaseLock;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -15,6 +16,9 @@ import java.util.List;
 
 //все начинается с calcTime().
 public class Mining {
+    private JFrame jFrame;
+    int timeFillHangar = 0;
+    int timeAsteroidEnd = 999;
     private int rangeLaser;
     private Robot robot;
     private Region regionForSearchM3;
@@ -23,10 +27,11 @@ public class Mining {
     private Asteroid asteroid = null;
 
     //Класс с методами для определения астероида для добычи.
-    public Mining(int rangeLaser, Robot robot, Region regionForSearchM3) {
+    public Mining(int rangeLaser, Robot robot, Region regionForSearchM3, JFrame jFrame) {
         this.rangeLaser = rangeLaser;
         this.robot = robot;
         this.regionForSearchM3 = regionForSearchM3;
+        this.jFrame = jFrame;
     }
 
     //задолбался указывать регион для поиска :)
@@ -127,6 +132,10 @@ public class Mining {
         boolean result = true;
         int timeFillShip = 980; //время заполнения трюма коробля в секундах
         int timeMiningAsteroid = 0;
+        Region regionHundred = new Region(10,100,40,40);
+        Region regionDec = new Region(10,200,40,40);
+        regionHundred.highlightOn();
+        regionDec.highlightOn();
         while (timeFillShip > 0) {
             if (timeMiningAsteroid <= 0) {
                 control.removeLasers();
@@ -143,6 +152,15 @@ public class Mining {
             timeFillShip -= 2;
             timeMiningAsteroid -= 2;
             System.out.println(String.format("Время окончания загрузки %s, время выработки астероида %s ", timeFillShip, timeMiningAsteroid));
+            jFrame.setTitle(String.format("H = %s, A = %s ", timeFillShip, timeMiningAsteroid));
+            if (timeFillShip<100){
+                regionHundred.highlightOff();
+            }
+            if (timeFillShip<10){
+                regionDec.highlightOff();
+            }
+//            timeFillHangar = timeFillShip;
+//            timeAsteroidEnd = timeMiningAsteroid;
         }
         return result;
     }
@@ -183,4 +201,6 @@ public class Mining {
         }
         return asteroidList.size() > 0 ? asteroidList.get(0) : null;
     }
+
+
 }

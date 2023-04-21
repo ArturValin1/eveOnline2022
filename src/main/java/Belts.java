@@ -10,8 +10,6 @@ public class Belts {
 
         belts.add(new Belt());
         belts.add(new Belt1());
-        belts.add(new Belt2());
-        belts.add(new Belt2_1());
     }
 
     public List<BaseClass> getBelts() {

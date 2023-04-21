@@ -8,6 +8,6 @@ public class Transfer extends BaseClass{
     }
 
     public Transfer() {
-        super(new Region(71,52,1015,673), "transfer.png");
+        super(new Region(62,35,1090,800), "transfer.png");
     }
 }

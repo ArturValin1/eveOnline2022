@@ -8,6 +8,6 @@ public class PlagioclaseLock extends BaseClass{
     }
 
     public PlagioclaseLock() {
-        super(new Region(722,32,396,193), "plagioclaseLock.png");
+        super(new Region(1205,28,250,169), "plagio01.png");
     }
 }

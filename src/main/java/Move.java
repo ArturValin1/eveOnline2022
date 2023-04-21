@@ -1,4 +1,6 @@
 import org.sikuli.script.FindFailed;
+import org.sikuli.script.Region;
+import org.sikuli.script.Screen;
 import place.*;
 
 import java.awt.*;
@@ -25,9 +27,10 @@ public class Move {
 
 
     public void addAsteroids() {
-        listAsteroids.add("veldspar.png");
-        listAsteroids.add("scordite.png");
-        listAsteroids.add("plagioclase.png");
+        listAsteroids.add("pl01.png");
+//        listAsteroids.add("veldspar.png");
+//        listAsteroids.add("scordite.png");
+//        listAsteroids.add("plagioclase.png");
     }
 
     public boolean moveToUnloadAndReturned() {
@@ -72,11 +75,11 @@ public class Move {
                     for (String s : listAsteroids) {
                         if (clickTo.rightClick(inv.getRegion(), s)) {
                             robot.delay(300);
-                            clickTo.leftClick(inv.getRegion(), "selectAll.png");
+                            clickTo.leftClick(new Region(312, 84, 997, 796), "selectAll.png"); //регион указал вручную, можно и в константу запихнуть
                             try {
-                                transfer.getRegion().dragDrop(s, transfer.getRegion().find("dropItems.png"));
+                                robot.delay(500);
+                                transfer.getRegion().dragDrop(s, new Region(312, 84, 997, 796).find("factoryHold.png"));
                                 result = clickTo.leftClick(transfer.getRegion(), transfer.getPic());
-
                             } catch (FindFailed e) {
                                 e.printStackTrace();
                             }

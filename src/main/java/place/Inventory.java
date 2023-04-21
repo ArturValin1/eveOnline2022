@@ -11,7 +11,7 @@ public class Inventory extends BaseClass {
     }
 
     public Inventory() {
-        super(new Region(0, 36, 643, 365), "miningHold.png");
+        super(new Region(59, 40, 765, 555), "OreHolderShip.png");
         //заполняем последовательно кнопки которые нужно нажать.
         fillKeys(KeyEvent.VK_ALT);
         fillKeys(KeyEvent.VK_C);

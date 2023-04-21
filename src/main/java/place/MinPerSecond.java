@@ -8,6 +8,6 @@ public class MinPerSecond extends BaseClass{
     }
 
     public MinPerSecond() {
-        super(new Region(755,782,98,52), "minPerSecond.png");
+        super(new Region(908,951,124,57), "mps.png");
     }
 }

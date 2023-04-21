@@ -8,6 +8,6 @@ public class LaserOnAsteroid extends BaseClass{
     }
 
     public LaserOnAsteroid() {
-        super(new Region(722,32,396,193), "laserAsteroid.png");
+        super(new Region(1161,164,229,139), "laserOnAsteroid.png");
     }
 }

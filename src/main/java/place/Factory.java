@@ -8,6 +8,6 @@ public class Factory extends BaseClass {
     }
 
     public Factory() {
-        super(new Region(1074, 29, 526, 268), "factory.png");
+        super(new Region(1402, 130, 496, 309), "Athanor.png");
     }
 }

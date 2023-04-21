@@ -2,23 +2,32 @@ import org.sikuli.script.Screen;
 import place.BaseClass;
 
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class Start {
+    Move move;
+    Mining mining;
+    private JFrame jFrame;
 
-    public static void main(String[] args) throws AWTException {
+    public Start(JFrame jFrame) {
+        this.jFrame = jFrame;
+    }
+
+    public void main() throws AWTException {
         Belts belts = new Belts();
         belts.initPlace();
         List<BaseClass> listBelts = belts.getBelts();
-        Start s = new Start();
+//        Start s = new Start();
         Robot robot = new Robot();
-        Move move = new Move(robot);
+        move = new Move(robot);
         Control control = new Control(robot);
         robot.delay(1_000);
-        Mining mining = new Mining(16, robot, new Screen().selectRegion());
-        s.miningStart(robot, move, control, mining, listBelts);
+        mining = new Mining(16, robot, new Screen().selectRegion(), jFrame);
+//        s.miningStart(robot, move, control, mining, listBelts);
+        miningStart(robot, move, control, mining, listBelts);
         System.out.println("END");
     }
 

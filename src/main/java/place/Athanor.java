@@ -11,7 +11,7 @@ public class Athanor extends BaseClass {
     }
 
     public Athanor() {
-        super(new Region(305, 86, 705, 481), "athanor.png");
+        super(new Region(601, 344, 720, 481), "refeneryForCompress.png");
         //заполняем последовательно кнопки которые нужно нажать.
         fillKeys(KeyEvent.VK_ALT);
         fillKeys(KeyEvent.VK_E);
